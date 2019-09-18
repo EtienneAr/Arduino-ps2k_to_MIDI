@@ -15,7 +15,7 @@ void play_key(int key) {
   if(key<256) {
     note = table_note_filled[key];
     if(note > 0) {
-      Serial.println("Play " + String(note));
+      play_note(note);
       if(record_loop) loop_record(note);
     } else {
       switch(note) {
@@ -40,12 +40,7 @@ void play_key(int key) {
  * Handle key_released events
  */
 void stop_key(int key) {
-  Serial.print("Stop\t");
-  if(key<256) Serial.println(table_note_filled[key]);
-  else {
-    Serial.print("Sp");
-    Serial.println(key);
-  }
+  if(key<256) stop_note(table_note_filled[key]);
 }
 
 

@@ -1,8 +1,10 @@
-long int loop_start = 0, loop_period = 1;
+long int loop_start = 0;
+long int loop_period = 1;
 bool isTapingLoop = false;
 
 bool isLoopPlaying = false;
-int curr_noteLoop = 0;
+Event* curr_noteLoop = 0;
+int long loop_playTime;
 
 
 inline void tap_loop() {
@@ -18,10 +20,30 @@ inline void tap_loop() {
 
 inline void loop_record(int note) {
   EventList::add(note, (millis() - loop_start) % loop_period);
-  if(!isLoopPlaying) play_loop();
+  if(!isLoopPlaying) start_play_loop();
 }
 
-void play_loop() {
-  Event* e = EventList::get(0);
-  
+void start_play_loop() {
+  curr_noteLoop = EventList::get(0);
+  int period_nb = (millis() - loop_start) / loop_period;
+  loop_playTime = curr_noteLoop->event_time + (period_nb + 1) * loop_period + loop_start;
+  isLoopPlaying = true;
+  Serial.println("isLoopPlaying " + String(isLoopPlaying) + " Playtime " + String(loop_playTime) + " millis() " + String(millis()));
+}
+
+inline void play_loop() {
+  Serial.println(millis());
+  if(isLoopPlaying && loop_playTime < millis()) {
+    play_note(curr_noteLoop->note);
+    //get next note
+    int period_nb = (millis() - loop_start) / loop_period;
+    curr_noteLoop = curr_noteLoop->next_event;
+    if(curr_noteLoop != NULL) {
+      loop_playTime = curr_noteLoop->event_time + period_nb * loop_period + loop_start;
+    } else {
+      //End of the list, go back to first event
+      curr_noteLoop = EventList::get(0);
+      loop_playTime = curr_noteLoop->event_time + (period_nb + 1) * loop_period + loop_start;
+    }
+  }
 }

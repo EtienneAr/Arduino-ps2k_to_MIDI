@@ -8,6 +8,6 @@ void setup() {
 
 
 void loop() {
+  play_loop();
   input_key(key_pressed = ps2k_getkey());
-  
 }

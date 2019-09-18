@@ -6,6 +6,7 @@
 void tap_loop();
 inline void loop_record(int note);
 bool record_loop = false;
+void start_play_loop();
 
 /*
  * List
@@ -40,3 +41,9 @@ class EventList {
 void play_key(int key);
 void stop_key(int key);
 void input_key(int key_pressed);
+
+/*
+ * Note playing
+ */
+ void play_note(int note);
+ void stop_note(int note);
