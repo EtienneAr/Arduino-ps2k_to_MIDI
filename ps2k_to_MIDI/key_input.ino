@@ -16,11 +16,18 @@ void play_key(int key) {
     note = table_note_filled[key];
     if(note > 0) {
       Serial.println("Play " + String(note));
+      if(record_loop) loop_record(note);
     } else {
       switch(note) {
-        case -13:
-          tap_tempo();
-        break;
+        case -13: //ESC
+          tap_loop();
+          break;
+        case -1: //F1
+          record_loop = !record_loop;
+          break;
+        case -2: //F2
+          //EventList::print();
+          break;
       }
     }
   } else {

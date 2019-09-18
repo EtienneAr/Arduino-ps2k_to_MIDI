@@ -1,7 +1,41 @@
 #include <ps2keypolled.h>
 
-void tap_tempo();
+/*
+ * Looper
+ */
+void tap_loop();
+inline void loop_record(int note);
+bool record_loop = false;
 
+/*
+ * List
+ */
+class Event {
+  public:
+    long int note;
+    int event_time;
+    Event* next_event;
+    
+    Event(int note, long int event_time) {
+      this->note = note;
+      this->event_time = event_time;
+      this->next_event = NULL;
+    }
+};
+
+class EventList {
+  public:
+    static void add(int note, long int event_time);  
+    //static void print();
+  
+  private:
+    static Event* first_event = NULL;
+};
+
+
+/*
+ * key_input
+ */
 void play_key(int key);
 void stop_key(int key);
 void input_key(int key_pressed);
