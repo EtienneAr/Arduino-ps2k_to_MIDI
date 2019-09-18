@@ -1,6 +1,8 @@
-long int loop_start, loop_period;
+long int loop_start = 0, loop_period = 1;
 bool isTapingLoop = false;
 
+bool isLoopPlaying = false;
+int curr_noteLoop = 0;
 
 
 inline void tap_loop() {
@@ -15,5 +17,11 @@ inline void tap_loop() {
 }
 
 inline void loop_record(int note) {
-  EventList::add(note, millis());
+  EventList::add(note, (millis() - loop_start) % loop_period);
+  if(!isLoopPlaying) play_loop();
+}
+
+void play_loop() {
+  Event* e = EventList::get(0);
+  
 }

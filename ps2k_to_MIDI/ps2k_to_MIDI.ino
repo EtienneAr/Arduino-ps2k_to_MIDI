@@ -25,7 +25,8 @@ class Event {
 
 class EventList {
   public:
-    static void add(int note, long int event_time);  
+    static void add(int note, long int event_time);
+    static Event* get(int i);  
     //static void print();
   
   private:

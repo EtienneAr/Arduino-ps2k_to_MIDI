@@ -16,6 +16,15 @@ static void EventList::add(int note, long int event_time) {
   }
 }
 
+static Event* EventList::get(int i) {
+  Event* ptr = first_event;
+  while(i > 0 && ptr != NULL) {
+    ptr = ptr->next_event;
+    i--;
+  }
+  return ptr;
+}
+
 /*
 static void EventList::print() {
   Event* ptr = first_event;
