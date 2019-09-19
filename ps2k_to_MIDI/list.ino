@@ -1,7 +1,7 @@
 static Event* EventList::first_event;
 
-static void EventList::add(int note, long int event_time) {
-  Event* ptr = new Event(note, event_time);
+static void EventList::add(int key, long int event_time) {
+  Event* ptr = new Event(key, event_time);
   if(first_event == NULL || first_event->event_time > ptr->event_time) {
     ptr->next_event = first_event;
     first_event = ptr;
@@ -30,7 +30,7 @@ static void EventList::print() {
   Event* ptr = first_event;
   Serial.println("List");
   while(ptr != NULL) {
-    Serial.print("(" + String(ptr->note) + ", " + String(ptr->event_time) + ")");
+    Serial.print("(" + String(ptr->key) + ", " + String(ptr->event_time) + ")");
     ptr = ptr->next_event;
   }
   Serial.println();

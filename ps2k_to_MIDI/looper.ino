@@ -3,7 +3,7 @@ long int loop_period = 1;
 bool isTapingLoop = false;
 
 bool isLoopPlaying = false;
-Event* curr_noteLoop = 0;
+Event* curr_keyLoop = 0;
 int long loop_playTime;
 
 
@@ -18,31 +18,31 @@ inline void tap_loop() {
   }
 }
 
-inline void loop_record(int note) {
-  EventList::add(note, (millis() - loop_start) % loop_period);
+inline void loop_record(int key) {
+  EventList::add(key, (millis() - loop_start) % loop_period);
   if(!isLoopPlaying) start_play_loop();
 }
 
 void start_play_loop() {
-  curr_noteLoop = EventList::get(0);
+  curr_keyLoop = EventList::get(0);
   int period_nb = (millis() - loop_start) / loop_period;
-  loop_playTime = curr_noteLoop->event_time + (period_nb + 1) * loop_period + loop_start;
+  loop_playTime = curr_keyLoop->event_time + (period_nb + 1) * loop_period + loop_start;
   isLoopPlaying = true;
-  Serial.println("isLoopPlaying " + String(isLoopPlaying) + " Playtime " + String(loop_playTime) + " millis() " + String(millis()));
+  //Serial.println("isLoopPlaying " + String(isLoopPlaying) + " Playtime " + String(loop_playTime) + " millis() " + String(millis()));
 }
 
 inline void play_loop() {
   if(isLoopPlaying && loop_playTime < millis()) {
-    play_note(curr_noteLoop->note);
-    //get next note
+    play_key(curr_keyLoop->key, false);
+    //get next key
     int period_nb = (millis() - loop_start) / loop_period;
-    curr_noteLoop = curr_noteLoop->next_event;
-    if(curr_noteLoop != NULL) {
-      loop_playTime = curr_noteLoop->event_time + period_nb * loop_period + loop_start;
+    curr_keyLoop = curr_keyLoop->next_event;
+    if(curr_keyLoop != NULL) {
+      loop_playTime = curr_keyLoop->event_time + period_nb * loop_period + loop_start;
     } else {
       //End of the list, go back to first event
-      curr_noteLoop = EventList::get(0);
-      loop_playTime = curr_noteLoop->event_time + (period_nb + 1) * loop_period + loop_start;
+      curr_keyLoop = EventList::get(0);
+      loop_playTime = curr_keyLoop->event_time + (period_nb + 1) * loop_period + loop_start;
     }
   }
 }

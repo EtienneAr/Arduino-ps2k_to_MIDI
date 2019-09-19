@@ -4,7 +4,7 @@
  * Looper
  */
 void tap_loop();
-inline void loop_record(int note);
+inline void loop_record(int key);
 bool record_loop = false;
 void start_play_loop();
 
@@ -13,12 +13,12 @@ void start_play_loop();
  */
 class Event {
   public:
-    long int note;
+    long int key;
     int event_time;
     Event* next_event;
     
-    Event(int note, long int event_time) {
-      this->note = note;
+    Event(int key, long int event_time) {
+      this->key = key;
       this->event_time = event_time;
       this->next_event = NULL;
     }
@@ -26,7 +26,7 @@ class Event {
 
 class EventList {
   public:
-    static void add(int note, long int event_time);
+    static void add(int key, long int event_time);
     static Event* get(int i);  
     //static void print();
   
@@ -38,12 +38,11 @@ class EventList {
 /*
  * key_input
  */
-void play_key(int key);
-void stop_key(int key);
 void input_key(int key_pressed);
+void play_key(int key);
+bool filter_key(int key_pressed);
 
 /*
  * Note playing
  */
- void play_note(int note);
- void stop_note(int note);
+ void play_note(int note, bool play);

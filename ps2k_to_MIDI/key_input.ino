@@ -8,22 +8,25 @@ int key_found;
 int i;
 
 /*
- * Handles key_pressed events
+ * Do the action corresponding to the key
  */
-void play_key(int key) {
+void play_key(int key, bool record) {
+  int key_nb = abs(key);
+  bool key_isPressed = (key > 0);
   int note;
-  if(key<256) {
-    note = table_note_filled[key];
+  
+  if(key_nb<256) {
+    note = table_note_filled[key_nb];
     if(note > 0) {
-      play_note(note);
-      if(record_loop) loop_record(note);
+      play_note(note, key_isPressed);
+      if(record_loop && record) loop_record(key);
     } else {
       switch(note) {
         case -13: //ESC
-          tap_loop();
+          if(key_isPressed) tap_loop();
           break;
         case -1: //F1
-          record_loop = !record_loop;
+          if(key_isPressed) record_loop = !record_loop;
           break;
         case -2: //F2
           //EventList::print();
@@ -37,18 +40,18 @@ void play_key(int key) {
 }
 
 /*
- * Handle key_released events
+ * Handles key events
  */
-void stop_key(int key) {
-  if(key<256) stop_note(table_note_filled[key]);
+void input_key(int key) {
+  if(!filter_key(key)) return; //This key was already taken into account
+  play_key(key, true);
 }
-
 
 /*
  * This function basically prevent to trigger multiple
  * time a note when the stay pressed on one key.
  */
-void input_key(int key_pressed) {
+bool filter_key(int key_pressed) {
   if(key_pressed > 0) {                   //keyPressed
     key_found = false;
     for(i=0;i<MAX_PRESSED_KEY;i++) {      //loop on the currently pressed keys
@@ -60,19 +63,18 @@ void input_key(int key_pressed) {
     if(!key_found) {                      //if the key is not pressed already
       for(i=0;i<MAX_PRESSED_KEY;i++) {
         if(pressed_keys[i] == -1) {       //if there is an empty space
-          play_key(key_pressed);
           pressed_keys[i] = key_pressed;  //add the key and play it
-          break;
+          return true;
         }
       }
     }
   } else {                                //keyReleased
     for(i=0;i<MAX_PRESSED_KEY;i++) {      //loop on the currently pressed keys
       if(pressed_keys[i] == -key_pressed) {
-        stop_key(-key_pressed);
         pressed_keys[i] = -1;
-        break;
+        return true;
       }
     }
   }
+  return false;
 }

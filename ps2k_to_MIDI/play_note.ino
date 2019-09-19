@@ -1,7 +1,7 @@
-void play_note(int note) {
-  Serial.println("Play " + String(note));
-}
-
-void stop_note(int note) {
-  Serial.println("Stop " + String(note));
+void play_note(int note, bool play) {
+  if(play) {
+    Serial.println("Play " + String(note));
+  } else {
+    Serial.println("Stop " + String(note));
+  }
 }
