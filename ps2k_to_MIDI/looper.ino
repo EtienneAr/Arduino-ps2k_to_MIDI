@@ -32,7 +32,6 @@ void start_play_loop() {
 }
 
 inline void play_loop() {
-  Serial.println(millis());
   if(isLoopPlaying && loop_playTime < millis()) {
     play_note(curr_noteLoop->note);
     //get next note

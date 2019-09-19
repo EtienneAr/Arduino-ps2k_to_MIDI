@@ -1,4 +1,4 @@
-#include <ps2keypolled.h>
+#include "src/ps2keypolled/ps2keypolled.h"
 
 /*
  * Looper
