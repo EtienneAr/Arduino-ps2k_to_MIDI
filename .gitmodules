@@ -1,0 +1,3 @@
+[submodule "ps2k_to_MIDI/src/ps2keypolled"]
+	path = ps2k_to_MIDI/src/ps2keypolled
+	url = https://github.com/EtienneAr/ps2keypolled.git
