@@ -28,14 +28,20 @@ void play_key(int key, bool record) {
         case -1: //F1
           if(key_isPressed) record_loop = !record_loop;
           break;
-        case -2: //F2
-          //EventList::print();
+        case -10: //F10
+          if(key_isPressed) channel_OnOff ^= 0x1;
+          break;
+        case -11: //F11
+          if(key_isPressed) channel_OnOff ^= 0x2;
+          break;
+        case -12: //F12
+          if(key_isPressed) channel_OnOff ^= 0x4;
           break;
       }
     }
   } else {
-    Serial.print("Sp");
-    Serial.println(key);
+    //Serial.print("Sp");
+    //Serial.println(key);
   }
 }
 

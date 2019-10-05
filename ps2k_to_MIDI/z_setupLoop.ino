@@ -5,7 +5,7 @@ void ISR_func(int key_code) {
 }
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(31250);
   pinMode(13,OUTPUT);
   
   for(i=0;i<MAX_PRESSED_KEY;i++) {

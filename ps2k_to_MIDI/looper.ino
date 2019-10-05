@@ -14,7 +14,7 @@ inline void tap_loop() {
   } else {
     loop_period = millis()-loop_start;
     isTapingLoop = false;
-    Serial.println("Start : " + String(loop_start) + " loop : " + String(loop_period));
+    //Serial.println("Start : " + String(loop_start) + " loop : " + String(loop_period));
   }
 }
 
