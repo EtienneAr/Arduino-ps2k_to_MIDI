@@ -4,11 +4,4 @@ void play_note(int note, bool play) {
   Serial.write(status_byte);
   Serial.write(12+note);
   Serial.write(100);
-  /*
-  if(play) {
-    Serial.println("Play " + String(note));
-  } else {
-    Serial.println("Stop " + String(note));
-  }
-  */
 }
