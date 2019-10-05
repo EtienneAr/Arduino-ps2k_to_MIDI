@@ -1,7 +1,7 @@
 static Event* EventList::first_event;
 
-static void EventList::add(int key, long int event_time) {
-  Event* ptr = new Event(key, event_time);
+static void EventList::add(int note, bool play, byte channel, long int event_time) {
+  Event* ptr = new Event(note, play, channel, event_time);
   if(first_event == NULL || first_event->event_time > ptr->event_time) {
     ptr->next_event = first_event;
     first_event = ptr;

@@ -13,12 +13,16 @@ void start_play_loop();
  */
 class Event {
   public:
-    long int key;
-    int event_time;
+    int note;
+    bool play;
+    byte channel;
+    long int event_time;
     Event* next_event;
     
-    Event(int key, long int event_time) {
-      this->key = key;
+    Event(int note, bool play, byte channel, long int event_time) {
+      this->note = note;
+      this->play = play;
+      this->channel = channel;
       this->event_time = event_time;
       this->next_event = NULL;
     }
@@ -26,7 +30,7 @@ class Event {
 
 class EventList {
   public:
-    static void add(int key, long int event_time);
+    static void add(int note, bool play, byte channel, long int event_time);
     static Event* get(int i);  
     //static void print();
   
@@ -45,5 +49,6 @@ bool filter_key(int key_pressed);
 /*
  * Note playing
  */
- byte channel_OnOff = 0b111 ;
- void play_note(int note, bool play);
+byte channel_OnOff = 0b111 ;
+void play_note(int note, bool play, byte channel);
+void play_note(int note, bool play);

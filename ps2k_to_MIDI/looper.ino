@@ -19,10 +19,8 @@ inline void tap_loop() {
   }
 }
 
-inline void loop_record(int key) {
-  if(isTapingLoop) EventList::add(key, millis() - loop_start);
-  else EventList::add(key, (millis() - loop_start) % loop_period);
-
+inline void loop_record(int note, bool play, byte channel) {
+  EventList::add(note, play, channel, (millis() - loop_start) % loop_period);
 }
 
 void start_play_loop() {
@@ -33,8 +31,9 @@ void start_play_loop() {
 }
 
 inline void play_loop() {
-  if(isLoopPlaying && loop_playTime < millis()) {
-    play_key(curr_keyLoop->key, false);
+  if(isLoopPlaying && millis() > loop_playTime) {
+    play_note(curr_keyLoop->note, curr_keyLoop->play, curr_keyLoop->channel);
+    
     //get next key
     int period_nb = (millis() - loop_start) / loop_period;
     curr_keyLoop = curr_keyLoop->next_event;

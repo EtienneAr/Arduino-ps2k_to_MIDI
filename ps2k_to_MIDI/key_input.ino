@@ -10,7 +10,7 @@ int i;
 /*
  * Do the action corresponding to the key
  */
-void play_key(int key, bool record) {
+void play_key(int key) {
   int key_nb = abs(key);
   bool key_isPressed = (key > 0);
   int note;
@@ -19,7 +19,7 @@ void play_key(int key, bool record) {
     note = table_note_filled[key_nb];
     if(note > 0) {
       play_note(note, key_isPressed);
-      if(record_loop && record) loop_record(key);
+      if(record_loop) loop_record(note, key_isPressed, channel_OnOff);
     } else {
       switch(note) {
         case -13: //ESC
@@ -50,7 +50,7 @@ void play_key(int key, bool record) {
  */
 void input_key(int key) {
   if(!filter_key(key)) return; //This key was already taken into account
-  play_key(key, true);
+  play_key(key);
 }
 
 /*
