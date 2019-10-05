@@ -18,7 +18,7 @@ void play_key(int key) {
   if(key_nb<256) {
     note = table_note_filled[key_nb];
     if(note > 0) {
-      play_note(note, key_isPressed);
+      play_note(note, key_isPressed, channel_OnOff);
       if(record_loop) loop_record(note, key_isPressed, channel_OnOff);
     } else {
       switch(note) {

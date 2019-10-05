@@ -51,4 +51,3 @@ bool filter_key(int key_pressed);
  */
 byte channel_OnOff = 0b111 ;
 void play_note(int note, bool play, byte channel);
-void play_note(int note, bool play);

@@ -5,7 +5,3 @@ void play_note(int note, bool play, byte channel) {
   Serial.write(12+note);
   Serial.write(100);
 }
-
-void play_note(int note, bool play) {
-  play_note(note, play, channel_OnOff);
-}
