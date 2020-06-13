@@ -2,7 +2,6 @@ unsigned long int loop_start = 0;
 unsigned long int loop_period = -1;
 bool isTapingLoop = false;
 
-bool isLoopPlaying = false;
 Event* curr_keyLoop = 0;
 int long loop_playTime;
 

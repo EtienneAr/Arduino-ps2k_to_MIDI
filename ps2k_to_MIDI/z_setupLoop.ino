@@ -13,6 +13,8 @@ void setup() {
   }
   ps2k_attach(ISR_func);
   ps2k_init(3, 4);
+
+  initLEDS();
 }
 
 

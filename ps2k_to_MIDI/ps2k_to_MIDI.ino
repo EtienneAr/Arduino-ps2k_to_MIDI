@@ -7,6 +7,7 @@ void tap_loop();
 inline void loop_record(int key);
 bool record_loop = false;
 void start_play_loop();
+bool isLoopPlaying = false;
 
 /*
  * List
@@ -38,6 +39,11 @@ class EventList {
     static Event* first_event = NULL;
 };
 
+/*
+ * leds
+ */
+void initLEDS();
+void updateLEDS();
 
 /*
  * key_input
@@ -46,8 +52,11 @@ void input_key(int key_pressed);
 void play_key(int key);
 bool filter_key(int key_pressed);
 
+
 /*
  * Note playing
  */
-byte channel_OnOff = 0b111 ;
+byte channel_play_OnOff = 0b111 ;
+byte channel_replay_OnOff = 0b111;
+byte channel_record_OnOff = 0b000;
 void play_note(int note, bool play, byte channel);

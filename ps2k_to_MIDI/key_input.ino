@@ -18,8 +18,8 @@ void play_key(int key) {
   if(key_nb<256) {
     note = table_note_filled[key_nb];
     if(note > 0) {
-      play_note(note, key_isPressed, channel_OnOff);
-      if(record_loop) loop_record(note, key_isPressed, channel_OnOff);
+      play_note(note, key_isPressed, channel_play_OnOff);
+      if(record_loop) loop_record(note, key_isPressed, channel_play_OnOff);
     } else {
       switch(note) {
         case -13: //ESC
@@ -28,16 +28,48 @@ void play_key(int key) {
         case -1: //F1
           if(key_isPressed) record_loop = !record_loop;
           break;
+
+         //Record instruments
+        case -2: //F2
+          if(key_isPressed) channel_record_OnOff ^= 0x1;
+          break;
+        case -3: //3
+          if(key_isPressed) channel_record_OnOff ^= 0x2;
+          break;
+        case -4: //F4
+          if(key_isPressed) channel_record_OnOff ^= 0x4;
+          break;
+
+        case -5: //F5
+          if(key_isPressed) {
+            isLoopPlaying = !isLoopPlaying;
+            if(isLoopPlaying) start_play_loop;
+          }
+          break;
+
+         //Replay instruments
+        case -6: //F6
+          if(key_isPressed) channel_replay_OnOff ^= 0x1;
+          break;
+        case -7: //F7
+          if(key_isPressed) channel_replay_OnOff ^= 0x2;
+          break;
+        case -8: //F8
+          if(key_isPressed) channel_replay_OnOff ^= 0x4;
+          break;
+
+        //Play instruments
         case -10: //F10
-          if(key_isPressed) channel_OnOff ^= 0x1;
+          if(key_isPressed) channel_play_OnOff ^= 0x1;
           break;
         case -11: //F11
-          if(key_isPressed) channel_OnOff ^= 0x2;
+          if(key_isPressed) channel_play_OnOff ^= 0x2;
           break;
         case -12: //F12
-          if(key_isPressed) channel_OnOff ^= 0x4;
+          if(key_isPressed) channel_play_OnOff ^= 0x4;
           break;
       }
+      updateLEDS();
     }
   } else {
     //Serial.print("Sp");
