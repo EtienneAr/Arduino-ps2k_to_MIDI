@@ -7,6 +7,8 @@ int table_note_filled[] = {0, -9, 0, -5, -3, -1, -2, -12, 0, -10, -8, -6, -4, 31
 int key_found;
 int i;
 
+byte instrument_pressed = 0b000;
+
 /*
  * Do the action corresponding to the key
  */
@@ -19,57 +21,77 @@ void play_key(int key) {
     note = table_note_filled[key_nb];
     if(note > 0) {
       play_note(note, key_isPressed, channel_play_OnOff);
-      if(record_loop) loop_record(note, key_isPressed, channel_play_OnOff);
+      if(record_loop && (channel_play_OnOff & channel_record_OnOff) != 0) {
+        loop_record(note, key_isPressed, channel_play_OnOff & channel_record_OnOff);
+      }
     } else {
-      switch(note) {
-        case -13: //ESC
-          if(key_isPressed) tap_loop();
-          break;
-        case -1: //F1
-          if(key_isPressed) record_loop = !record_loop;
-          break;
-
-         //Record instruments
-        case -2: //F2
-          if(key_isPressed) channel_record_OnOff ^= 0x1;
-          break;
-        case -3: //3
-          if(key_isPressed) channel_record_OnOff ^= 0x2;
-          break;
-        case -4: //F4
-          if(key_isPressed) channel_record_OnOff ^= 0x4;
-          break;
-
-        case -5: //F5
-          if(key_isPressed) {
+      if(key_isPressed) {
+        switch(note) {
+          case -13: //ESC
+            tap_loop();
+            break;
+          case -1: //F1
+            record_loop = !record_loop;
+            break;
+  
+           //Record instruments
+          case -2: //F2
+            channel_record_OnOff ^= 0x1;
+            break;
+          case -3: //3
+            channel_record_OnOff ^= 0x2;
+            break;
+          case -4: //F4
+            channel_record_OnOff ^= 0x4;
+            break;
+  
+          case -5: //F5
             isLoopPlaying = !isLoopPlaying;
             if(isLoopPlaying) start_play_loop;
-          }
-          break;
-
-         //Replay instruments
-        case -6: //F6
-          if(key_isPressed) channel_replay_OnOff ^= 0x1;
-          break;
-        case -7: //F7
-          if(key_isPressed) channel_replay_OnOff ^= 0x2;
-          break;
-        case -8: //F8
-          if(key_isPressed) channel_replay_OnOff ^= 0x4;
-          break;
-
-        //Play instruments
-        case -10: //F10
-          if(key_isPressed) channel_play_OnOff ^= 0x1;
-          break;
-        case -11: //F11
-          if(key_isPressed) channel_play_OnOff ^= 0x2;
-          break;
-        case -12: //F12
-          if(key_isPressed) channel_play_OnOff ^= 0x4;
-          break;
-      }
-      updateLEDS();
+            break;
+  
+           //Replay instruments
+          case -6: //F6
+            channel_replay_OnOff ^= 0x1;
+            break;
+          case -7: //F7
+            channel_replay_OnOff ^= 0x2;
+            break;
+          case -8: //F8
+            channel_replay_OnOff ^= 0x4;
+            break;
+  
+          //Play instruments
+          case -9: //F9
+            channel_play_OnOff = 0b000;
+            break;
+          case -10: //F10
+            instrument_pressed |= 0b001;
+            channel_play_OnOff = instrument_pressed;
+            break;
+          case -11: //F11
+            instrument_pressed |= 0b010;
+            channel_play_OnOff = instrument_pressed;
+            break;
+          case -12: //F12
+            instrument_pressed |= 0b100;
+            channel_play_OnOff = instrument_pressed;
+            break;
+        } //switch(note)
+        updateLEDS();
+      } else { //key released
+        switch(note) {
+          case -10: //F10
+            instrument_pressed &= 0b110;
+            break;
+          case -11: //F11
+            instrument_pressed &= 0b101;
+            break;
+          case -12: //F12
+            instrument_pressed &=  0b011;
+            break;
+        }
+      } //if(key_isPressed)
     }
   } else {
     //Serial.print("Sp");

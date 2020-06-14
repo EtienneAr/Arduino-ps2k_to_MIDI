@@ -42,6 +42,9 @@ void initLEDS() {
   digitalWrite(LED_2_G, LOW); delay(LED_SETUP_DELAY);
   digitalWrite(LED_3_R, LOW); delay(LED_SETUP_DELAY);
   digitalWrite(LED_3_G, LOW); delay(LED_SETUP_DELAY);
+
+  //Update
+  updateLEDS();
 }
 
 void updateLEDS() {

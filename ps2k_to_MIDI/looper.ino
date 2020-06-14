@@ -31,7 +31,7 @@ void start_play_loop() {
 
 inline void play_loop() {
   if(isLoopPlaying && millis() > loop_playTime) {
-    play_note(curr_keyLoop->note, curr_keyLoop->play, curr_keyLoop->channel);
+    play_note(curr_keyLoop->note, curr_keyLoop->play, curr_keyLoop->channel & channel_replay_OnOff);
     
     //get next key
     int period_nb = (millis() - loop_start) / loop_period;
