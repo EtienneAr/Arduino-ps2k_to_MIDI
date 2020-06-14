@@ -67,7 +67,7 @@ void play_key(int key) {
   
           //Play instruments
           case -9: //F9
-            channel_play_OnOff = 0b000;
+            channel_off(0b111);
             break;
           case -10: //F10
             instrument_pressed |= 0b001;

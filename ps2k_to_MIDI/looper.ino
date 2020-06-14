@@ -9,6 +9,8 @@ int long loop_playTime;
 inline void tap_loop() {
   if(!isTapingLoop) {
     loop_start = millis();
+    loop_period = -1; //Unsigned overflow to maximum value
+        
     isTapingLoop = true;
     record_loop = true;
     isLoopPlaying = false;
@@ -21,6 +23,7 @@ inline void tap_loop() {
     loop_period = millis()-loop_start;
     isTapingLoop = false;
     loop_record(-1,false,0); //Add a dummy event in case loop is empty
+    record_loop = false;
     start_play_loop();
   }
 }
