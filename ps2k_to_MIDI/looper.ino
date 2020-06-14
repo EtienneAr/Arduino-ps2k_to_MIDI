@@ -11,9 +11,16 @@ inline void tap_loop() {
     loop_start = millis();
     isTapingLoop = true;
     record_loop = true;
+    isLoopPlaying = false;
+
+    //in case of previous loop
+    EventList::clean();
+    channel_off(0b111);
+    
   } else {
     loop_period = millis()-loop_start;
     isTapingLoop = false;
+    loop_record(-1,false,0); //Add a dummy event in case loop is empty
     start_play_loop();
   }
 }

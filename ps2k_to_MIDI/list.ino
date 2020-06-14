@@ -25,6 +25,17 @@ static Event* EventList::get(int i) {
   return ptr;
 }
 
+static void EventList::clean() {
+  Event* ptr = first_event;
+  while(ptr != NULL) {
+    Event* next_ptr = ptr->next_event;
+    delete ptr;
+    ptr = next_ptr;
+  }
+
+  first_event = NULL;
+}
+
 /*
 static void EventList::print() {
   Event* ptr = first_event;

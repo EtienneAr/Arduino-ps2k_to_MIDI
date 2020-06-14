@@ -33,6 +33,7 @@ class EventList {
   public:
     static void add(int note, bool play, byte channel, long int event_time);
     static Event* get(int i);  
+    static void clean();
     //static void print();
   
   private:
