@@ -10,7 +10,7 @@
 #define LED_1_R 11
 #define LED_1_G 12
 
-#define LED_SETUP_DELAY 100
+#define LED_SETUP_DELAY 80
 
 void initLEDS() {
   //Mode

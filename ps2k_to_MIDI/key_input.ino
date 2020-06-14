@@ -47,18 +47,22 @@ void play_key(int key) {
   
           case -5: //F5
             isLoopPlaying = !isLoopPlaying;
-            if(isLoopPlaying) start_play_loop;
+            if( isLoopPlaying) start_play_loop;
+            if(!isLoopPlaying) channel_off(0b111);
             break;
   
            //Replay instruments
           case -6: //F6
             channel_replay_OnOff ^= 0x1;
+            if((channel_replay_OnOff & 0b001) == 0) channel_off(0b001);
             break;
           case -7: //F7
             channel_replay_OnOff ^= 0x2;
+            if((channel_replay_OnOff & 0b010) == 0) channel_off(0b010);
             break;
           case -8: //F8
             channel_replay_OnOff ^= 0x4;
+            if((channel_replay_OnOff & 0b100) == 0) channel_off(0b100);
             break;
   
           //Play instruments

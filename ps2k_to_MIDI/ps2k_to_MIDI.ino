@@ -60,3 +60,4 @@ byte channel_play_OnOff = 0b111 ;
 byte channel_replay_OnOff = 0b111;
 byte channel_record_OnOff = 0b000;
 void play_note(int note, bool play, byte channel);
+void channel_off(byte channel);
