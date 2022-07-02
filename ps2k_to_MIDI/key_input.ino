@@ -97,9 +97,13 @@ void play_key(int key) {
         }
       } //if(key_isPressed)
     }
-  } else {
-    //Serial.print("Sp");
-    //Serial.println(key);
+  } else { // Special keys
+    if(key_nb == 381 && key_isPressed) { // PageUp
+      octavier += 1;
+    }
+    if(key_nb == 378 && key_isPressed) { //PageDown
+      octavier -= 1;
+    }
   }
 }
 

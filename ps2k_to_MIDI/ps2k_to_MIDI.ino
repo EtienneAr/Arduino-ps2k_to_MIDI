@@ -57,6 +57,7 @@ bool filter_key(int key_pressed);
 /*
  * Note playing
  */
+int octavier = 1; //Start at "first" octave. (Can be negative...)
 byte channel_play_OnOff = 0b111 ;
 byte channel_replay_OnOff = 0b111;
 byte channel_record_OnOff = 0b111;
