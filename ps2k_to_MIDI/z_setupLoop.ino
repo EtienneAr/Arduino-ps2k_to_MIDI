@@ -6,10 +6,11 @@ void ISR_func(int key_code) {
 
 void setup() {
   Serial.begin(31250);
+  //Serial.begin(115200);
   pinMode(13,OUTPUT);
   
   for(i=0;i<MAX_PRESSED_KEY;i++) {
-    pressed_keys[i] = -1;
+    pressed_keys[i].key = -1;
   }
   ps2k_attach(ISR_func);
   ps2k_init(3, 4);

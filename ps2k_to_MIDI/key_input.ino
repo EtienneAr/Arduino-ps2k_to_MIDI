@@ -1,10 +1,7 @@
-#define MAX_PRESSED_KEY 4
-
-int pressed_keys[MAX_PRESSED_KEY];
+#define MAX_PRESSED_KEY 6
+PressedKeyData pressed_keys[MAX_PRESSED_KEY];
 
 int table_note_filled[] = {0, -9, 0, -5, -3, -1, -2, -12, 0, -10, -8, -6, -4, 31, 30, 0, 0, 0, 11, 0, 0, 33, 32, 0, 0, 0, 14, 15, 13, 35, 34, 0, 0, 17, 16, 0, 36, 37, 0, 0, 0, 0, 19, 18, 40, 38, 39, 0, 0, 23, 21, 22, 20, 41, 0, 0, 0, 0, 24, 0, 43, 42, 44, 0, 0, 26, 25, 45, 47, 0, 46, 0, 0, 28, 29, 27, 0, 48, 49, 0, 0, 0, 30, 0, 50, 51, 0, 0, 0, 31, 0, 52, 0, 33, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -13, 0, -11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, };
-
-int key_found;
 int i;
 
 byte instrument_pressed = 0b000;
@@ -12,21 +9,22 @@ byte instrument_pressed = 0b000;
 /*
  * Do the action corresponding to the key
  */
-void play_key(int key) {
+void play_key(int key, int octave) {
   int key_nb = abs(key);
   bool key_isPressed = (key > 0);
-  int note;
+  int raw_note;
   
   if(key_nb<256) {
-    note = table_note_filled[key_nb];
-    if(note > 0) {
+    raw_note = table_note_filled[key_nb];
+    if(raw_note > 0) {
+      int note = octave*12+raw_note;
       play_note(note, key_isPressed, channel_play_OnOff);
       if(record_loop && (channel_play_OnOff & channel_record_OnOff) != 0) {
         loop_record(note, key_isPressed, channel_play_OnOff & channel_record_OnOff);
       }
     } else {
       if(key_isPressed) {
-        switch(note) {
+        switch(raw_note) {
           case -13: //ESC
             tap_loop();
             break;
@@ -84,7 +82,7 @@ void play_key(int key) {
         } //switch(note)
         updateLEDS();
       } else { //key released
-        switch(note) {
+        switch(raw_note) {
           case -10: //F10
             instrument_pressed &= 0b110;
             break;
@@ -111,38 +109,40 @@ void play_key(int key) {
  * Handles key events
  */
 void input_key(int key) {
-  if(!filter_key(key)) return; //This key was already taken into account
-  play_key(key);
+  PressedKeyFilterRes filt = filter_key(key);
+  if(filt.filterIn) {
+    play_key(key, filt.octave);
+  }
 }
 
 /*
  * This function basically prevent to trigger multiple
  * time a note when the stay pressed on one key.
+ * Because when kept pressed, multiple signals are sent.
+ * 
+ * It also takes a screenshot of some variable when the key was pressed to give it back when its released (such as octavier)
  */
-bool filter_key(int key_pressed) {
+PressedKeyFilterRes filter_key(int key_pressed) {
   if(key_pressed > 0) {                   //keyPressed
-    key_found = false;
     for(i=0;i<MAX_PRESSED_KEY;i++) {      //loop on the currently pressed keys
-      if(pressed_keys[i] == key_pressed) {
-        key_found = true;
-        break;
+      if(pressed_keys[i].key == key_pressed) {
+        return {false, 0}; // The key has been found don't take it in consideration
       }
     }
-    if(!key_found) {                      //if the key is not pressed already
-      for(i=0;i<MAX_PRESSED_KEY;i++) {
-        if(pressed_keys[i] == -1) {       //if there is an empty space
-          pressed_keys[i] = key_pressed;  //add the key and play it
-          return true;
-        }
+    for(i=0;i<MAX_PRESSED_KEY;i++) {   // Insert the key in an empty space to register it
+      if(pressed_keys[i].key == -1) {
+        pressed_keys[i].key = key_pressed;
+        pressed_keys[i].octave = octavier;
+        return {true, octavier}; // Note that is the key couldn't have been registered it will be filtered out
       }
     }
   } else {                                //keyReleased
     for(i=0;i<MAX_PRESSED_KEY;i++) {      //loop on the currently pressed keys
-      if(pressed_keys[i] == -key_pressed) {
-        pressed_keys[i] = -1;
-        return true;
+      if(pressed_keys[i].key == -key_pressed) {
+        pressed_keys[i].key = -1;
+        return {true, pressed_keys[i].octave};
       }
     }
   }
-  return false;
+  return {false, 0};
 }

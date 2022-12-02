@@ -49,9 +49,19 @@ void updateLEDS();
 /*
  * key_input
  */
+struct PressedKeyData {
+  int key;
+  int octave;
+};
+
+struct PressedKeyFilterRes {
+  bool filterIn;
+  int octave;
+};
+ 
 void input_key(int key_pressed);
 void play_key(int key);
-bool filter_key(int key_pressed);
+PressedKeyFilterRes filter_key(int key_pressed);
 
 
 /*
